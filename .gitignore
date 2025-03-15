@@ -1,0 +1,49 @@
+# Python related
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.env
+*.egg-info/
+dist/
+build/
+
+# IDE related
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS related
+.DS_Store
+Thumbs.db
+
+# Project specific
+*.log
+logs/
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Large files and data
+*.csv
+*.zip
+*.tar.gz
+data/raw/
+models/*.bin
+models/*.pt
+models/*.pth
+
+# Database
+*.db
+*.sqlite
+
+# Environment variables
+.env.local
+.env.development
+.env.test
+.env.production
