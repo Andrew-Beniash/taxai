@@ -1,31 +1,32 @@
-# TaxAI - AI-Powered Tax Law Application
+# AI-Powered Tax Law System
 
-An intelligent assistant for tax law research and consultation.
+An intelligent system leveraging AI to provide accurate tax law research, document processing, and compliance validation.
 
-## Overview
+## Technology Stack
 
-TaxAI uses modern AI techniques to provide accurate tax law information with proper citations. The system is built around retrieval-augmented generation and a knowledge base of tax law documents.
+- **Backend**: FastAPI, Python, LangChain, PostgreSQL
+- **AI/ML**: PyTorch, LLMs (Llama 3, Mistral), FAISS, Tesseract OCR
+- **Data Storage**: PostgreSQL, ChromaDB/FAISS
+- **Messaging**: RabbitMQ/Kafka
+- **Frontend**: React (Next.js), Tailwind CSS
 
-## Features (Planned)
-
-- Natural language tax law queries
-- Document upload for context-aware answers
-- Citation of relevant tax codes and regulations
-- Secure handling of sensitive tax information
-
-## Development
-
-This project is currently in MVP development. Follow the setup instructions below to get started.
-
-## Environment Setup
+## Development Setup
 
 1. Clone the repository
 2. Create a virtual environment: `python -m venv venv`
-3. Activate the virtual environment:
+3. Activate the virtual environment: 
    - Windows: `venv\Scripts\activate`
-   - Unix/MacOS: `source venv/bin/activate`
+   - macOS/Linux: `source venv/bin/activate`
 4. Install dependencies: `pip install -r requirements.txt`
+5. Run the development server: `python src/main.py`
 
-## License
+## Project Structure
 
-[License information to be added]
+- `src/`: Source code
+  - `api/`: API endpoints and routers
+  - `core_ai/`: Core AI engine and tax law processing
+  - `agents/`: Specialized AI agents (Research, Document Processing, Verification)
+  - `security/`: Authentication and authorization
+  - `database/`: Database models and connections
+  - `utils/`: Utility functions
+- `tests/`: Test cases

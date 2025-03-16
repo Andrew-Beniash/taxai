@@ -1,1 +1,1 @@
-"""Utility functions for the TaxAI application."""
+# Utilities module initialization

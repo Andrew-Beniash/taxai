@@ -1,1 +1,1 @@
-"""API endpoints for the TaxAI application."""
+# API module initialization
