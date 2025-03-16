@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # FastAPI Application
+  api:
+    build: .
+    container_name: taxai-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/taxai
+      - CHROMA_HOST=chroma
+      - CHROMA_PORT=8000
+      - PYTHONPATH=/app
+    depends_on:
+      - db
+      - chroma
+    networks:
+      - taxai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # PostgreSQL Database
+  db:
+    image: postgres:14
+    container_name: taxai-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=taxai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - taxai-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ChromaDB Vector Database
+  chroma:
+    image: ghcr.io/chroma-core/chroma:latest
+    container_name: taxai-chroma
+    volumes:
+      - chroma_data:/chroma/chroma
+    ports:
+      - "8080:8000"
+    networks:
+      - taxai-network
+    environment:
+      - ALLOW_RESET=true
+      - CHROMA_DB_IMPL=duckdb+parquet
+      - CHROMA_PERSIST_DIRECTORY=/chroma/chroma
+
+  # RabbitMQ (Message Queue)
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: taxai-rabbitmq
+    ports:
+      - "5672:5672"  # AMQP protocol
+      - "15672:15672"  # Management interface
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - taxai-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+  chroma_data:
+  rabbitmq_data:
+
+networks:
+  taxai-network:
+    driver: bridge
