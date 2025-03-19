@@ -1,6 +1,21 @@
-# ai package initialization
+"""
+AI Package for Tax Law Application
 
-from app.ai.utils import check_library_imports, run_all_tests
+This package contains the AI model management and integration components.
+"""
 
-# Export utility functions
-__all__ = ["check_library_imports", "run_all_tests"]
+from app.ai.model_manager import (
+    get_model,
+    get_tokenizer,
+    get_rag_system,
+    generate_ai_response,
+    initialize
+)
+
+__all__ = [
+    'get_model',
+    'get_tokenizer',
+    'get_rag_system',
+    'generate_ai_response',
+    'initialize'
+]
