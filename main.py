@@ -28,10 +28,15 @@ app = FastAPI(
 # Add CORS middleware to allow requests from the frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For development - restrict in production
+    allow_origins=[
+        "http://localhost:3000",     # React development server
+        "http://localhost:8000",     # FastAPI UI
+        "http://localhost:8501",     # Streamlit
+        "https://taxai-app.vercel.app"  # Production frontend (when deployed)
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 # Request and response models

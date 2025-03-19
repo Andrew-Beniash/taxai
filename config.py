@@ -24,6 +24,10 @@ MODEL_NAMES = {
 # Current model name based on settings
 CURRENT_MODEL = MODEL_NAMES["mistral"] if USE_MISTRAL else MODEL_NAMES["llama"]
 
-# Device settings
+# Hugging Face API settings
+HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY", "")
+USE_HUGGINGFACE_API = os.getenv("USE_HUGGINGFACE_API", "true").lower() == "true"
+
+# Device settings (only used for local model, not for Hugging Face API)
 USE_CUDA = os.getenv("USE_CUDA", "false").lower() == "true"
 QUANTIZATION_BITS = int(os.getenv("QUANTIZATION_BITS", "16"))

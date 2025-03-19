@@ -1,113 +1,146 @@
-# AI-Powered Tax Law System
+# Tax Law AI - Retrieval-Augmented Generation (RAG) System
 
-This project implements a tax law query processing system using AI (Large Language Models) to provide accurate responses to tax-related questions.
-
-## Features
-
-- AI-powered tax law query processing
-- API endpoints for integrating with frontend applications
-- Model optimization with quantization to improve performance
-- Docker support for containerized deployment
+This repository contains a Retrieval-Augmented Generation (RAG) system designed for tax law applications. It allows for efficient storage, indexing, and retrieval of tax law documents.
 
 ## Project Structure
 
 ```
 taxai/
 ├── ai_engine/                # AI model and query processing
-│   ├── __init__.py           
-│   ├── model_loader.py       # Handles loading and optimizing LLM
-│   └── query_processor.py    # Processes tax law queries
-├── main.py                   # FastAPI application
-├── requirements.txt          # Python dependencies
-├── .env                      # Environment variables
-├── Dockerfile                # Docker configuration
-├── test_query.py             # Test script for API
-└── README.md                 # Project documentation
+├── rag/                      # RAG system
+│   ├── __init__.py           # Package initialization
+│   ├── rag_system.py         # Main RAG implementation
+│   ├── preprocessing.py      # Document preprocessing utilities
+│   └── example.py            # Example usage
+├── data/
+│   └── tax_law_db/           # ChromaDB database storage (created automatically)
+└── requirements.txt          # Project dependencies
 ```
 
-## Setup Instructions
+## Setup
 
-### Prerequisites
+1. Create and activate a virtual environment:
 
-- Python 3.10+
-- [Hugging Face account](https://huggingface.co/) with access to Llama 3 or Mistral models
-- Docker (optional, for containerized deployment)
-
-### Installation
-
-1. Clone the repository
-```
-git clone <repository-url>
-cd taxai
-```
-
-2. Create a virtual environment and activate it
-```
+```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. Install dependencies
-```
+2. Install the required dependencies:
+
+```bash
 pip install -r requirements.txt
 ```
 
-4. Configure your environment variables in `.env` file
-```
-# Choose model (USE_MISTRAL=true for Mistral, false for Llama 3)
-USE_MISTRAL=false
-```
+3. Set up Hugging Face API credentials in the `.env` file:
 
-5. Authenticate with Hugging Face
 ```
-huggingface-cli login
+# Hugging Face API settings
+USE_HUGGINGFACE_API=true
+HUGGINGFACE_API_KEY=your_huggingface_api_key_here
 ```
 
-### Running the API
+4. Verify the Hugging Face API connection:
 
-1. Start the FastAPI server:
-```
-uvicorn main:app --reload
-```
+```bash
+# Make the verification script executable first
+./make_verify_huggingface_executable.sh
 
-2. Access the API at http://localhost:8000
-   - API documentation: http://localhost:8000/docs
-
-### Testing
-
-Run a test query:
-```
-python test_query.py --query "What are the tax deductions for small businesses?"
+# Run the verification script
+./verify_huggingface_connection.py
 ```
 
-### Docker Deployment
+## Hugging Face API Setup
 
-1. Build the Docker image:
+This project uses the Hugging Face Inference API to run LLM models instead of hosting them locally. Here's how to set it up:
+
+1. **Create a Hugging Face Account**:
+   - Visit [huggingface.co](https://huggingface.co) and sign up for an account
+   - Navigate to your profile settings
+
+2. **Generate an API Key**:
+   - Go to "Settings" > "Access Tokens"
+   - Create a new token with "read" scope (or higher if you plan to upload models)
+   - Copy the API key and add it to your `.env` file
+
+3. **Model Access**:
+   - Some models like Mistral-7B-Instruct may require you to accept terms of use
+   - Visit the model page (e.g., [Mistral-7B-Instruct-v0.2](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2))
+   - Click "Accept terms and access repository" if prompted
+
+4. **Test Your Setup**:
+   - Run the verification script to ensure everything is working properly
+
+For more details on using the Hugging Face Inference API, refer to the [official documentation](https://huggingface.co/docs/api-inference/usage).
+
+## Usage
+
+The RAG system consists of three main components:
+
+1. **Document Preprocessing**: Prepare and optimize tax law documents for indexing
+2. **Vector Database**: Store document embeddings using ChromaDB
+3. **Semantic Search**: Retrieve relevant tax law references based on user queries
+
+### Example Usage
+
+```python
+from rag.rag_system import TaxLawRAG
+from rag.preprocessing import prepare_document_for_indexing
+
+# Initialize the RAG system
+rag = TaxLawRAG(db_path="./data/tax_law_db")
+
+# Prepare and index a document
+doc = {
+    "id": "irs-section-179",
+    "content": "Section 179 allows taxpayers to deduct the cost of certain property...",
+    "metadata": {
+        "source": "IRS Publication",
+        "year": 2023,
+        "title": "Section 179 Deduction"
+    }
+}
+
+# Index the document
+rag.index_document(
+    doc_id=doc["id"],
+    content=doc["content"],
+    metadata=doc["metadata"]
+)
+
+# Search for relevant documents
+query = "What are small business deductions for equipment?"
+results = rag.search(query, n_results=3)
+
+# Display results
+for result in results:
+    print(f"Document: {result['id']}")
+    print(f"Content: {result['content'][:100]}...")
+    print(f"Metadata: {result['metadata']}")
 ```
-docker build -t taxai .
+
+### Running the Example
+
+To run the example script that demonstrates the RAG system:
+
+```bash
+python -m rag.example
 ```
 
-2. Run the container:
-```
-docker run -p 8000:8000 taxai
-```
+This will:
+1. Initialize the ChromaDB database
+2. Index sample tax law documents
+3. Run sample queries to show how the RAG system works
 
-## Model Selection
+## Features
 
-This system supports two LLM options:
+- **Cloud-based LLM**: Uses Hugging Face's Inference API for better scalability and ease of use
+- **Vector Storage**: Efficiently stores and retrieves document embeddings using ChromaDB
+- **Document Chunking**: Splits long documents into manageable chunks with configurable overlap
+- **Metadata Extraction**: Automatically extracts tax-specific entities (section numbers, dollar amounts, etc.)
+- **Semantic Search**: Finds the most relevant tax law references for user queries
+- **Hybrid Search**: Combines keyword and semantic search for improved accuracy
 
-1. **Llama 3.1 (8B) Instruct**: Better reasoning capabilities, more accurate for complex tax scenarios (requires Meta approval for access)
-2. **Mistral (7B) Instruct**: Faster response times, suitable for simpler queries and is openly accessible
+## License
 
-By default, the system is configured to use Mistral since it doesn't require special access permissions. To switch between models, update the `USE_MISTRAL` variable in your `.env` file.
-
-### Note on Model Access
-
-The Llama 3.1 model requires special access from Meta. You'll need to request access at [Meta's Llama website](https://llama.meta.com/) before you can use it. Until then, the system will default to using Mistral's open-access model.
-
-## Future Improvements
-
-- [ ] Implement Retrieval-Augmented Generation (RAG) for better factual accuracy
-- [ ] Add document upload and processing capabilities
-- [ ] Develop an agent orchestration system
-- [ ] Enhance compliance validation for tax laws
+[MIT License](LICENSE)

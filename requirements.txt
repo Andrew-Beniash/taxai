@@ -1,18 +1,35 @@
 # Core dependencies
 fastapi>=0.105.0
 uvicorn>=0.23.2
-pydantic>=2.4.2
+pydantic>=2.3.0
+python-dotenv>=1.0.0
 
-# AI/ML dependencies
+# RAG system dependencies
+chromadb>=0.4.18
+sentence-transformers>=2.2.2
+nltk>=3.8.1
+pycryptodome>=3.19.0
+
+# ML dependencies
 torch>=2.0.0
 transformers>=4.35.0
-accelerate>=0.25.0
-bitsandbytes>=0.41.0  # For 4-bit quantization
-sentencepiece>=0.1.99  # Required for tokenization
+langchain>=0.0.267
+faiss-cpu>=1.7.4
 
-# Vector database (will expand when implementing RAG)
-chromadb>=0.4.18
-sentence-transformers>=2.2.2  # For embeddings
+# Hugging Face API
+huggingface_hub>=0.16.4
+requests>=2.28.0
 
-# Utils
-python-dotenv>=1.0.0
+# Document processing
+pytesseract>=0.3.10
+python-multipart>=0.0.6
+pdf2image>=1.16.3
+
+# Database
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.7
+redis>=4.6.0
+
+# Test dependencies
+pytest>=7.4.0
+pytest-asyncio>=0.21.1
