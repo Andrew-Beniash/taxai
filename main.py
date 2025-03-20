@@ -16,6 +16,7 @@ from pydantic import BaseModel
 
 from ai_engine.model_loader import model_loader
 from ai_engine.query_processor import process_tax_query, preprocess_query
+from ai_engine.validation import validate_query, validate_ai_response
 
 
 # Initialize FastAPI app
@@ -82,15 +83,27 @@ async def query_endpoint(request: QueryRequest):
         QueryResponse with AI-generated answer and metadata
     """
     try:
+        # Validate user input
+        is_valid, error_message = validate_query(request.query)
+        if not is_valid:
+            raise HTTPException(status_code=400, detail=error_message)
+        
         # Verify model is loaded
         if not hasattr(model_loader, 'model') or model_loader.model is None:
-            raise HTTPException(status_code=503, detail="AI model is still loading. Please try again in a moment.")
+            raise HTTPException(status_code=503, 
+                               detail="AI model is still loading. Please try again in a moment.")
         
         # Track processing time
         start_time = time.time()
         
         # Process the query
         result = process_tax_query(request.query, request.context)
+        
+        # Validate the AI response
+        is_valid_response, response_error = validate_ai_response(result)
+        if not is_valid_response:
+            raise HTTPException(status_code=422, 
+                               detail=response_error or "Invalid or incomplete AI response generated.")
         
         # Calculate processing time
         processing_time = time.time() - start_time
@@ -103,10 +116,20 @@ async def query_endpoint(request: QueryRequest):
             "processing_time": processing_time
         }
         
+    except HTTPException:
+        # Re-raise HTTP exceptions to preserve status codes and details
+        raise
+        
+    except ValueError as ve:
+        # Handle value errors (like model not loaded)
+        print(f"Value error processing query: {str(ve)}")
+        raise HTTPException(status_code=400, detail=str(ve))
+        
     except Exception as e:
         # Log the error (would use proper logging in production)
         print(f"Error processing query: {str(e)}")
-        raise HTTPException(status_code=500, detail="Error processing tax query")
+        raise HTTPException(status_code=500, 
+                          detail="An unexpected error occurred while processing your tax query. Please try again later.")
 
 
 # Basic UI redirect (optional)

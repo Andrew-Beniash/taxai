@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taxai-chroma
+  labels:
+    app: taxai
+    component: chroma
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: taxai
+      component: chroma
+  template:
+    metadata:
+      labels:
+        app: taxai
+        component: chroma
+    spec:
+      containers:
+      - name: chroma
+        image: ghcr.io/chroma-core/chroma:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: ALLOW_RESET
+          value: "true"
+        - name: CHROMA_DB_IMPL
+          value: "duckdb+parquet"
+        - name: CHROMA_PERSIST_DIRECTORY
+          value: "/chroma/chroma"
+        volumeMounts:
+        - name: chroma-data
+          mountPath: /chroma/chroma
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "300m"
+      volumes:
+      - name: chroma-data
+        persistentVolumeClaim:
+          claimName: chroma-pvc

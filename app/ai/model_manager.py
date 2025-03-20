@@ -23,6 +23,22 @@ _model = None
 _tokenizer = None
 _rag_system = None
 
+def _get_huggingface_token():
+    """
+    Get Hugging Face API token from environment variable or .env file
+    """
+    hf_token = os.getenv("HUGGINGFACE_TOKEN")
+    if not hf_token:
+        logger.warning("HUGGINGFACE_TOKEN not found in environment variables")
+        # Try to read it from a token file
+        token_path = os.path.expanduser("~/.huggingface/token")
+        if os.path.exists(token_path):
+            with open(token_path, "r") as f:
+                hf_token = f.read().strip()
+                logger.info("Found Hugging Face token in ~/.huggingface/token")
+    
+    return hf_token
+
 def get_model():
     """
     Loads and returns the model, with caching to avoid reloading.
@@ -31,6 +47,9 @@ def get_model():
     if _model is None:
         logger.info(f"Loading model: {MODEL_PATH}")
         try:
+            # Get Hugging Face token
+            hf_token = _get_huggingface_token()
+            
             # For GPU
             if torch.cuda.is_available():
                 logger.info("Using GPU for model inference")
@@ -38,7 +57,8 @@ def get_model():
                 _model = AutoModelForCausalLM.from_pretrained(
                     MODEL_PATH, 
                     torch_dtype=torch.float16,
-                    low_cpu_mem_usage=True
+                    low_cpu_mem_usage=True,
+                    token=hf_token
                 ).to(device)
             else:
                 # For CPU (with quantization to reduce memory usage)
@@ -46,12 +66,21 @@ def get_model():
                 _model = AutoModelForCausalLM.from_pretrained(
                     MODEL_PATH,
                     device_map="auto",
-                    load_in_8bit=True  # Use quantization to reduce memory needs
+                    load_in_8bit=True,  # Use quantization to reduce memory needs
+                    token=hf_token
                 )
                 
             logger.info("Model loaded successfully")
         except Exception as e:
             logger.error(f"Error loading model: {str(e)}")
+            
+            # Provide a specific message for authentication errors
+            if "401" in str(e) and "Unauthorized" in str(e):
+                raise RuntimeError(
+                    "Authentication failed when loading the model. "
+                    "Please set your HUGGINGFACE_TOKEN environment variable. "
+                    "You can get a token from https://huggingface.co/settings/tokens"
+                )
             raise RuntimeError(f"Failed to load AI model: {str(e)}")
     
     return _model
@@ -64,10 +93,21 @@ def get_tokenizer():
     if _tokenizer is None:
         logger.info(f"Loading tokenizer: {MODEL_PATH}")
         try:
-            _tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
+            # Get Hugging Face token
+            hf_token = _get_huggingface_token()
+            
+            _tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH, token=hf_token)
             logger.info("Tokenizer loaded successfully")
         except Exception as e:
             logger.error(f"Error loading tokenizer: {str(e)}")
+            
+            # Provide a specific message for authentication errors
+            if "401" in str(e) and "Unauthorized" in str(e):
+                raise RuntimeError(
+                    "Authentication failed when loading the tokenizer. "
+                    "Please set your HUGGINGFACE_TOKEN environment variable. "
+                    "You can get a token from https://huggingface.co/settings/tokens"
+                )
             raise RuntimeError(f"Failed to load tokenizer: {str(e)}")
     
     return _tokenizer

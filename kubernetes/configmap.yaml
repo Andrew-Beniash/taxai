@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: taxai-configmap
+data:
+  API_HOST: "0.0.0.0"
+  API_PORT: "8000"
+  DEBUG: "false"
+  USE_MISTRAL: "true"
+  USE_HUGGINGFACE_API: "true"
+  DATABASE_URL: "postgresql://postgres:postgres@taxai-postgres:5432/taxai"
+  CHROMA_HOST: "taxai-chroma"
+  CHROMA_PORT: "8000"

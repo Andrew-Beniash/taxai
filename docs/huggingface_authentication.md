@@ -1,14 +1,3 @@
-#!/bin/bash
-
-# Test AI Processing Integration Script
-echo "Testing AI Processing Integration"
-echo "================================="
-
-# Create the docs directory if it doesn't exist
-mkdir -p docs
-
-# Create the Hugging Face authentication guide
-cat > docs/huggingface_authentication.md << 'EOF'
 # Setting Up Hugging Face Authentication
 
 The Mistral-7B model requires authentication to download from Hugging Face. Here's how to set up access:
@@ -84,30 +73,3 @@ Some models on Hugging Face require accepting terms and conditions before use. I
 1. Visit the model page directly: [mistralai/Mistral-7B-v0.1](https://huggingface.co/mistralai/Mistral-7B-v0.1)
 2. Check if there's a "Sign Model Use Agreement" button
 3. Accept the terms if required
-EOF
-
-echo "Authentication guide created at docs/huggingface_authentication.md"
-
-# First load sample data into the RAG system
-echo "Loading sample data into RAG system..."
-python -m rag.sample_data_loader
-
-# Ask the user which test they want to run
-echo
-echo "Choose a test method:"
-echo "1) Full model test (downloads the model, requires more memory)"
-echo "2) Inference API test (lighter, still requires authentication)"
-read -p "Enter your choice (1/2): " choice
-
-if [ "$choice" = "1" ]; then
-    echo "Running full model integration test..."
-    python test_ai_integration.py
-elif [ "$choice" = "2" ]; then
-    echo "Running Inference API test..."
-    python test_inference_api.py
-else
-    echo "Invalid choice. Defaulting to Inference API test..."
-    python test_inference_api.py
-fi
-
-echo "Test completed."

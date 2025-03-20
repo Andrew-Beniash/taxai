@@ -2,9 +2,24 @@ fastapi==0.105.0
 uvicorn==0.23.2
 pydantic>=2.5.2,<3.0.0
 python-dotenv==1.0.0
-# AI/ML libraries to be added later
-# torch==2.0.1
-# transformers==4.30.2
-# langchain==0.3.20
-# chromadb==0.4.0
-# faiss-cpu==1.7.4
+requests==2.31.0
+# AI/ML libraries
+torch==2.0.1
+transformers==4.30.2
+langchain==0.3.20
+chromadb==0.4.0
+faiss-cpu==1.7.4
+# Database connectors
+psycopg2-binary==2.9.6
+# Testing
+pytest==7.3.1
+httpx==0.24.1
+# API documentation and validation
+pika==1.3.2
+# Rate limiting and security
+fastapi-limiter==0.1.5
+python-jose==3.3.0
+passlib==1.7.4
+bcrypt==4.0.1
+# Monitoring and logging
+prometheus-fastapi-instrumentator==5.9.1

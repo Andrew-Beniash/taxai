@@ -1,35 +1,43 @@
 """
-Test script for AI query processing integration.
+Test script for Hugging Face Inference API integration.
 
 This script tests the AI model integration with the RAG system
-by processing a sample tax law query and printing the result.
+using the Hugging Face Inference API instead of loading the model locally.
+This is a lighter-weight alternative for testing.
 """
 
 import logging
 import sys
-from app.ai.model_manager import generate_ai_response
+from app.ai.inference_api_manager import generate_ai_response
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def main():
-    """Run a test query through the AI model"""
+    """Run a test query through the Inference API"""
     
     # Sample tax law query
     test_query = "What are the tax deductions available for small businesses?"
     
-    logger.info(f"Processing test query: {test_query}")
+    logger.info(f"Processing test query through Inference API: {test_query}")
     
     try:
-        # Generate AI response
+        # Generate AI response with fallback to mock if API is unavailable
         response = generate_ai_response(test_query)
         
         # Print the results
         print("\n" + "="*80)
         print(f"QUERY: {test_query}")
         print("="*80)
-        print(f"RESPONSE: {response['response']}")
+        
+        # Indicate if this is a mock response
+        if response.get("is_mock"):
+            print("RESPONSE (MOCK - API UNAVAILABLE): ")
+        else:
+            print("RESPONSE (via Inference API): ")
+            
+        print(response['response'])
         print("-"*80)
         print("CITATIONS:")
         
@@ -46,6 +54,12 @@ def main():
         
         print("-"*80)
         print(f"Confidence Score: {response.get('confidence_score', 'N/A')}")
+        
+        if response.get("is_mock"):
+            print("\nNOTE: The Hugging Face Inference API is currently unavailable.")
+            print("This is a mock response generated for testing purposes.")
+            print("Try again later when the API is available.")
+        
         print("="*80)
         
         logger.info("Test completed successfully")
@@ -56,7 +70,7 @@ def main():
         # Print helpful instructions for authentication errors
         if "Authentication failed" in str(e) or "Unauthorized" in str(e):
             print("\n" + "!"*80)
-            print("AUTHENTICATION ERROR: Unable to access the Mistral-7B model")
+            print("AUTHENTICATION ERROR: Unable to access the Hugging Face Inference API")
             print("!"*80)
             print("\nTo fix this issue:")
             print("1. Get a Hugging Face token from: https://huggingface.co/settings/tokens")

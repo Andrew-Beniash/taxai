@@ -18,11 +18,18 @@ DEBUG = os.getenv("DEBUG", "true").lower() == "true"
 USE_MISTRAL = os.getenv("USE_MISTRAL", "true").lower() == "true"
 MODEL_NAMES = {
     "mistral": "mistralai/Mistral-7B-Instruct-v0.2",
-    "llama": "meta-llama/Llama-3.1-8B-Instruct"
+    "llama": "meta-llama/Llama-3.1-8B-Instruct",
+    "zephyr": "HuggingFaceH4/zephyr-7b-beta"
 }
 
+# Allow model override from environment
+MODEL_OVERRIDE = os.getenv("MODEL_OVERRIDE", "")
+
 # Current model name based on settings
-CURRENT_MODEL = MODEL_NAMES["mistral"] if USE_MISTRAL else MODEL_NAMES["llama"]
+if MODEL_OVERRIDE:
+    CURRENT_MODEL = MODEL_OVERRIDE
+else:
+    CURRENT_MODEL = MODEL_NAMES["mistral"] if USE_MISTRAL else MODEL_NAMES["llama"]
 
 # Hugging Face API settings
 HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY", "")

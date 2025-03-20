@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taxai-api
+  labels:
+    app: taxai
+    component: api
+spec:
+  replicas: 2  # Start with 2 replicas for high availability
+  selector:
+    matchLabels:
+      app: taxai
+      component: api
+  template:
+    metadata:
+      labels:
+        app: taxai
+        component: api
+    spec:
+      containers:
+      - name: taxai-api
+        image: taxai-api:latest  # This should match the image name from your Docker build
+        imagePullPolicy: IfNotPresent  # Use local images for development
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: taxai-configmap
+        - secretRef:
+            name: taxai-secret
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        volumeMounts:
+        - name: model-cache
+          mountPath: /app/model_cache
+      volumes:
+      - name: model-cache
+        emptyDir: {}

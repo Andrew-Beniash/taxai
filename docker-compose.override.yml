@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  api:
+    environment:
+      - USE_MISTRAL=false
+      - MODEL_OVERRIDE=HuggingFaceH4/zephyr-7b-beta
+      - USE_HUGGINGFACE_API=true

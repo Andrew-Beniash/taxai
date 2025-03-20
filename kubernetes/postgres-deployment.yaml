@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taxai-postgres
+  labels:
+    app: taxai
+    component: postgres
+spec:
+  replicas: 1  # Only one instance of Postgres
+  selector:
+    matchLabels:
+      app: taxai
+      component: postgres
+  template:
+    metadata:
+      labels:
+        app: taxai
+        component: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:14
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "taxai"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: taxai-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: taxai-secret
+              key: POSTGRES_PASSWORD
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "300m"
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: postgres-pvc

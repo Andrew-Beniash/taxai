@@ -14,6 +14,9 @@ services:
       - CHROMA_HOST=chroma
       - CHROMA_PORT=8000
       - PYTHONPATH=/app
+      - USE_HUGGINGFACE_API=true
+    env_file:
+      - .env
     depends_on:
       - db
       - chroma
@@ -35,7 +38,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=taxai
     ports:
-      - "5432:5432"
+      - "5433:5432"  # Changed from 5432:5432 to avoid port conflict
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
