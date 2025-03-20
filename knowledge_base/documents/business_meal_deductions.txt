@@ -1,0 +1,28 @@
+
+# Business Meal Deductions
+
+## Overview
+The Internal Revenue Code allows businesses to deduct the cost of business meals under certain circumstances.
+
+## Current Deduction Rules
+For 2023, businesses can generally deduct 50% of meal expenses that are:
+- Ordinary and necessary
+- Not lavish or extravagant
+- Directly related to or associated with the business
+
+However, meals provided by restaurants are 100% deductible in 2023.
+
+## Documentation Requirements
+To support a deduction for meal expenses, you need records showing:
+- The amount spent
+- The date the meal occurred
+- The place where the meal took place
+- The business purpose of the meal
+- The business relationship of the people at the meal
+
+## Non-Deductible Meal Expenses
+The following meal expenses are generally not deductible:
+- Personal meals while not traveling
+- Meals that are lavish or extravagant
+- Meals where no business is conducted
+- Meals where only employees are present and no business is discussed

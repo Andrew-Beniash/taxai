@@ -5,6 +5,7 @@ This script initializes the ChromaDB directory structure and tests the connectio
 import os
 import sys
 import logging
+import time
 from pathlib import Path
 from datetime import date
 
@@ -85,6 +86,10 @@ def setup_vector_db():
         chunk_size=512,
         chunk_overlap=50
     )
+    
+    # Wait a moment for ChromaDB to process embeddings
+    logger.info("Waiting for ChromaDB to process embeddings...")
+    time.sleep(1)
     
     # Test search functionality
     logger.info("Testing search functionality...")

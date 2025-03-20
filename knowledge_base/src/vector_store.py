@@ -59,8 +59,8 @@ class TaxLawVectorStore:
             self.collection = self.client.get_collection(name=self.collection_name)
             logger.info(f"Retrieved existing collection: {self.collection_name}")
             logger.info(f"Collection count: {self.collection.count()}")
-        except ValueError:
-            # Collection doesn't exist, create it
+        except Exception as e:
+            # Collection doesn't exist or another error occurred
             logger.info(f"Creating new collection: {self.collection_name}")
             self.collection = self.client.create_collection(
                 name=self.collection_name,

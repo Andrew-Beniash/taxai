@@ -1,0 +1,6 @@
+# Document Processing Requirements
+requests>=2.28.0
+beautifulsoup4>=4.11.0
+PyMuPDF>=1.20.0  # For PDF processing
+python-docx>=0.8.11  # For DOCX processing
+tqdm>=4.64.0  # For progress bars

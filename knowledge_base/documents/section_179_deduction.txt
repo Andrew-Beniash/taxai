@@ -1,0 +1,22 @@
+
+# Section 179 Deduction
+
+## Overview
+Section 179 of the Internal Revenue Code allows taxpayers to deduct the cost of certain types of property on their income taxes as an expense, rather than requiring the cost of the property to be capitalized and depreciated.
+
+## 2023 Deduction Limit
+For tax years beginning in 2023, the maximum section 179 expense deduction is $1,160,000. This limit is reduced by the amount by which the cost of section 179 property placed in service during the tax year exceeds $2,890,000.
+
+## Qualified Property
+Property that qualifies for the Section 179 deduction includes:
+- Tangible personal property (machinery, equipment, etc.)
+- Computer software
+- Qualified improvement property
+- Certain improvements to nonresidential real property
+    - Roofs
+    - Heating, ventilation, and air-conditioning property
+    - Fire protection and alarm systems
+    - Security systems
+
+## Business Income Limitation
+The Section 179 deduction is limited to the taxable income derived from the active conduct of a trade or business. Any disallowed deduction due to the business income limitation can be carried forward to later tax years.
