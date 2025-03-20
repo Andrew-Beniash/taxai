@@ -6,4 +6,5 @@ numpy>=1.24.0           # Required by chromadb and sentence-transformers
 PyPDF2>=3.0.0           # PDF processing
 python-dateutil>=2.8.2  # Date handling
 typing-extensions>=4.5.0 # Type hints
+torch>=2.0.0            # PyTorch for sentence transformers
 langchain>=0.1.0        # Used for document processing (optional)

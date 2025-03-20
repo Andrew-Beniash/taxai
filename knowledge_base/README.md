@@ -26,6 +26,9 @@ knowledge_base/
 │   ├── preprocessor.py # Text preprocessing
 │   └── knowledge_base.py # Main interface
 ├── example.py          # Example usage
+├── setup_vector_db.py  # Script to set up the vector database
+├── populate_knowledge_base.py # Script to populate with sample documents
+├── SCHEMA.md           # Documentation of the document schema
 └── requirements.txt    # Dependencies
 ```
 
@@ -45,7 +48,19 @@ knowledge_base/
 pip install -r requirements.txt
 ```
 
-2. Run the example script to see how the knowledge base works:
+2. Set up the vector database:
+
+```bash
+python setup_vector_db.py
+```
+
+3. Populate the knowledge base with sample documents:
+
+```bash
+python populate_knowledge_base.py
+```
+
+4. Run the example script to see how the knowledge base works:
 
 ```bash
 python example.py
@@ -96,6 +111,8 @@ The knowledge base stores the following metadata for each document:
 - `tags`: Tags for categorization
 - `url`: URL to the original document
 
+See `SCHEMA.md` for detailed documentation of the metadata schema.
+
 ## Adding Custom Documents
 
 You can add your own tax law documents to the knowledge base by:
@@ -108,3 +125,18 @@ Supported document formats:
 - PDF files
 - Text files
 - JSON files (with text and metadata fields)
+
+## Vector Database Management
+
+The vector database is implemented using ChromaDB and provides:
+
+- Efficient semantic search using document embeddings
+- Rich metadata filtering capabilities
+- Chunking and processing for large documents
+- Persistent storage of embeddings and metadata
+
+To manage the vector database:
+
+- `setup_vector_db.py`: Initialize the vector store
+- `vector_store.py`: Contains the low-level ChromaDB operations
+- `knowledge_base.py`: Provides a high-level interface for database operations
